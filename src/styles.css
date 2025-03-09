@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/Inter-VariableFont_opsz\,wght.ttf') format('truetype');
+    font-weight: 100 900; /* Supports all weights from 100 to 900 */
+    font-style: regular;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+
+  .ng-select-container{
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .ng-select{
+    border: 1px solid;
+  }
+  
+  .ng-dropdown-panel{
+    background: #fff;
+    border: 1px solid;
+  }
+
+  .ng-value, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    padding: 5px 10px;
+}

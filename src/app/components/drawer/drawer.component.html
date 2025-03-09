@@ -1,0 +1,171 @@
+<div class="relative z-10" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <!--
+      Background backdrop, show/hide based on slide-over state.
+  
+      Entering: "ease-in-out duration-500"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "ease-in-out duration-500"
+        From: "opacity-100"
+        To: "opacity-0"
+    -->
+    <div class="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
+  
+    <div class="fixed inset-0 overflow-hidden">
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+          <!--
+            Slide-over panel, show/hide based on slide-over state.
+  
+            Entering: "transform transition ease-in-out duration-500 sm:duration-700"
+              From: "translate-x-full"
+              To: "translate-x-0"
+            Leaving: "transform transition ease-in-out duration-500 sm:duration-700"
+              From: "translate-x-0"
+              To: "translate-x-full"
+          -->
+          <div class="pointer-events-auto relative w-screen max-w-md">
+            <!--
+              Close button, show/hide based on slide-over state.
+  
+              Entering: "ease-in-out duration-500"
+                From: "opacity-0"
+                To: "opacity-100"
+              Leaving: "ease-in-out duration-500"
+                From: "opacity-100"
+                To: "opacity-0"
+            -->
+            <div class="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
+              <button type="button" class="relative rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" (click)="closePanel()">
+                <span class="absolute -inset-2.5"></span>
+                <span class="sr-only">Close panel</span>
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+  
+            <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+              <div class="px-4 sm:px-6">
+                @if(!isPreviewForm){
+                <h2 class="text-base font-semibold text-gray-900" id="slide-over-title">Input Properties</h2>
+                <h3>{{"Selected Field - " + currField.label}}</h3>
+                }
+              </div>
+              <div class="relative mt-6 flex-1 px-4 sm:px-6">
+                @if(!isPreviewForm){
+                <form [formGroup]="inputProps" (ngSubmit)="submitForm()">
+                <div class="mb-3">
+                  <div><label for="" class="mb-2 inline-block">Field Name</label></div>
+                  <div><input type="text" formControlName="name" class="border border-black rounded px-3 py-1" name="" id="" required></div>
+                </div>
+
+                <div class="mb-3">
+                  <div><label for="" class="mb-2 inline-block">Description</label></div>
+                  <div><input type="text" formControlName="description" class="border border-black rounded px-3 py-1" name="" id=""></div>
+                </div>
+                @if(currField.type !== 'form-header'){
+                <div class="mb-3">
+                  <div><label for="" class="mb-2 inline-block">Placeholder</label></div>
+                  <div><input type="text" formControlName="placeholder" class="border border-black rounded px-3 py-1" name="" id=""></div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="flex items-center">
+                    <input type="checkbox" formControlName="required" class="cursor-pointer px-3 py-1" name="" id="">
+                    <label for="" class="inline-block ml-2">Required</label>
+                  </div>
+                </div>
+
+                <!-- <div class="mb-3">
+                  <div class="flex justify-between">
+                    <label for="" class="mb-2 inline-block">Radio Button Options</label>
+                    <div class="flex">
+                      <button (click)="increaseOptionCount('radio')" class="py-[3px] px-3 w-10 bg-blue text-white" [disabled]="radioBtnCount >= 2 ? true : false"> + </button>
+                      <button (click)="decreaseOptionCount('radio')" class="py-[3px] px-3 w-10 bg-blue text-white" [disabled]="radioBtnCount === 0 ? true : false"> - </button>
+                    </div>
+              
+                  </div>
+                  <div>
+                    <label for="" class="mb-2 inline-block">{{ "Option " + radioBtnCount }}</label>
+                    <input type="text" class="border border-black rounded px-3 py-1" name="" id="" required>
+                  </div>
+                </div> -->
+              }
+                <div class="mb-3">
+                  <button type="submit" class="px-4 py-[5px] bg-blue text-white rounded">Submit</button>
+                </div>
+                @if(showErrMsg){
+                <div class="mb-3">
+                  <p class="font-medium text-red-500">Please fill the required fields.</p>
+                </div>
+              }
+              </form>
+            }
+              @if(isPreviewForm){
+                <form [formGroup]="currFormGroup" (ngSubmit)="submitForm()">
+                  @for(field of currForm; track field.type){
+                    <div class="mb-3">
+                      <div><label for="" class="mb-2 inline-block">{{ field.label }}</label></div>
+                      <div> @if(field.type === 'text' || field.type === 'number' || field.type === 'email' || field.type === 'password'){
+                        <input [type]="field.type" class="w-full border p-2 rounded">
+                      }
+                      @if(field.type === 'textarea'){
+                      <textarea class="w-full border p-2 rounded"></textarea>
+                      }
+                      @if(field.type === 'date'){
+                        <input type="date" class="w-full border p-2 rounded">
+                      }
+                      @if(field.type === 'select'){
+                        <dropdown ></dropdown>
+                      }
+                      @if(field.type === 'time'){
+                        <div class="ngx-timepicker-field-example">
+                          <ngx-timepicker-field [defaultTime]="'11:00 am'" [minutesGap]="5" [disabled]="true"></ngx-timepicker-field>
+                        </div>
+                      }
+                      @if(field.type === 'Date & time'){
+                        <div class="flex justify-around">
+                          <input type="date" class="w-full border p-2 rounded">
+                          <div class="ngx-timepicker-field-example">
+                            <ngx-timepicker-field [defaultTime]="'11:00 am'" [minutesGap]="5" [disabled]="true"></ngx-timepicker-field>
+                          </div>
+                          
+                        </div>
+                       
+                      }
+                      @if(field.type === 'checkbox'){
+                        <div class="flex">
+                          <div class="flex items-center mr-3"> 
+                            <input type="checkbox" class="mr-2 cursor-pointer">
+                            <p class="mb-0">Sample Option</p>
+                          </div>
+                          <div class="flex items-center">
+                            <input type="checkbox" class="mr-2 cursor-pointer">
+                            <p class="mb-0">Sample Option</p>
+                          </div>
+                         
+                        </div>
+                      }
+                      @if(field.type === 'radio'){
+                        <div class="flex items-center">
+                          <input type="radio" class="mr-2 cursor-pointer">
+                          <p class="mb-0">Sample Option</p>
+                        </div>      
+                      }
+                      @if(field.type === 'upload'){
+                        <media-upload></media-upload>
+                      }</div>
+                    </div>
+                  }
+                </form>
+              }
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

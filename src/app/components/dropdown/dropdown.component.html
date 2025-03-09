@@ -1,0 +1,6 @@
+<ng-select [(ngModel)]="selectedOption">
+    @for (option of options; track option) {
+        <ng-option [value]="option">{{ option.name }}</ng-option>
+    }
+  </ng-select>
+  
